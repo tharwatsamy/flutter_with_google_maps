@@ -14,7 +14,7 @@ class _CustomGoogleMapState extends State<CustomGoogleMap> {
   @override
   void initState() {
     initialCameraPostion = const CameraPosition(
-        target: LatLng(31.187084851056554, 29.928110526889437));
+        zoom: 20, target: LatLng(31.187084851056554, 29.928110526889437));
     super.initState();
   }
 
@@ -23,3 +23,9 @@ class _CustomGoogleMapState extends State<CustomGoogleMap> {
     return GoogleMap(initialCameraPosition: initialCameraPostion);
   }
 }
+
+// world view 0 -> 3
+// country view 4-> 6
+// city view 10 -> 12
+// street view 13 -> 17
+// building view 18 -> 20
