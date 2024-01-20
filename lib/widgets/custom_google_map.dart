@@ -15,44 +15,37 @@ class _CustomGoogleMapState extends State<CustomGoogleMap> {
   void initState() {
     initialCameraPostion = const CameraPosition(
         zoom: 12, target: LatLng(31.187084851056554, 29.928110526889437));
-
+    initMarkers();
     super.initState();
   }
 
-  @override
-  void dispose() {
-    googleMapController.dispose();
-    super.dispose();
-  }
-
+  Set<Marker> markers = {};
   late GoogleMapController googleMapController;
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        GoogleMap(
-            onMapCreated: (controller) {
-              googleMapController = controller;
-            },
-            // cameraTargetBounds: CameraTargetBounds(LatLngBounds(
-            //     southwest: const LatLng(31.080569617326795, 29.763491041232577),
-            //     northeast: const LatLng(31.30846738149212, 30.169298507189573))),
-            initialCameraPosition: initialCameraPostion),
-        Positioned(
-            bottom: 16,
-            left: 16,
-            right: 16,
-            child: ElevatedButton(
-                onPressed: () {
-                  CameraPosition newLocation = const CameraPosition(
-                      target: LatLng(30.623356417604505, 30.190702108159012),
-                      zoom: 12);
-                  googleMapController.animateCamera(CameraUpdate.newLatLng(
-                      const LatLng(30.623356417604505, 30.190702108159012)));
-                },
-                child: const Text('Change location'))),
-      ],
+    return GoogleMap(
+      markers: markers,
+      onMapCreated: (controller) {
+        googleMapController = controller;
+        initMapStyle();
+      },
+      initialCameraPosition: initialCameraPostion,
     );
+  }
+
+  void initMapStyle() async {
+    var nightMapStyle = await DefaultAssetBundle.of(context)
+        .loadString('assets/map_syles/night_map_style.json');
+
+    googleMapController.setMapStyle(nightMapStyle);
+  }
+
+  void initMarkers() {
+    var myMarker = const Marker(
+        markerId: MarkerId('1'),
+        position: LatLng(31.187084851056554, 29.928110526889437));
+
+    markers.add(myMarker);
   }
 }
 
