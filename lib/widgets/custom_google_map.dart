@@ -1,11 +1,6 @@
-import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_with_google_maps/models/place_model.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-import 'dart:ui' as ui;
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class CustomGoogleMap extends StatefulWidget {
   const CustomGoogleMap({super.key});
@@ -20,16 +15,20 @@ class _CustomGoogleMapState extends State<CustomGoogleMap> {
   @override
   void initState() {
     initialCameraPostion = const CameraPosition(
-        zoom: 12, target: LatLng(31.187084851056554, 29.928110526889437));
-    initMarkers();
+        zoom: 1, target: LatLng(31.187084851056554, 29.928110526889437));
+
+    initPolyLines();
     super.initState();
   }
 
   Set<Marker> markers = {};
+
+  Set<Polyline> polyLines = {};
   late GoogleMapController googleMapController;
   @override
   Widget build(BuildContext context) {
     return GoogleMap(
+      polylines: polyLines,
       zoomControlsEnabled: false,
       markers: markers,
       onMapCreated: (controller) {
@@ -47,40 +46,35 @@ class _CustomGoogleMapState extends State<CustomGoogleMap> {
     googleMapController.setMapStyle(nightMapStyle);
   }
 
-  // Future<Uint8List> getImageFromRawData(String image, double width) async {
-  //   var imageData = await rootBundle.load(image);
-  //   var imageCodec = await ui.instantiateImageCodec(
-  //       imageData.buffer.asUint8List(),
-  //       targetWidth: width.round());
-
-  //   var imageFrameInfo = await imageCodec.getNextFrame();
-
-  //   var imageBytData =
-  //       await imageFrameInfo.image.toByteData(format: ui.ImageByteFormat.png);
-
-  //   return imageBytData!.buffer.asUint8List();
-  // }
-
-  void initMarkers() async {
-    var customMarkerIcon = await BitmapDescriptor.fromAssetImage(
-        const ImageConfiguration(), 'assets/images/icons8-marker-50.png');
-    var myMarkers = places
-        .map(
-          (placeModel) => Marker(
-            icon: customMarkerIcon,
-            position: placeModel.latLng,
-            markerId: MarkerId(
-              placeModel.id.toString(),
-            ),
-          ),
-        )
-        .toSet();
-
-    markers.addAll(myMarkers);
-    setState(() {});
+  void initPolyLines() {
+    Polyline polyline = const Polyline(
+        geodesic: true,
+        patterns: [PatternItem.dot],
+        width: 5,
+        zIndex: 2,
+        startCap: Cap.roundCap,
+        color: Colors.red,
+        polylineId: PolylineId('1'),
+        points: [
+          LatLng(31.146667052085522, 29.881753268076064),
+          LatLng(31.183682581705128, 29.9059575204872),
+          LatLng(31.178982998722887, 29.942006407056986),
+          LatLng(31.209379299176593, 29.93719988884768),
+        ]);
+    Polyline polyline2 = const Polyline(
+        width: 5,
+        zIndex: 1,
+        startCap: Cap.roundCap,
+        color: Colors.black,
+        polylineId: PolylineId('2'),
+        points: [
+          LatLng(-32.53225272725898, 20.961370268194745),
+          LatLng(84.0278401870962, 53.83246214878455),
+        ]);
+    polyLines.add(polyline);
+    polyLines.add(polyline2);
   }
 }
-
 // world view 0 -> 3
 // country view 4-> 6
 // city view 10 -> 12
