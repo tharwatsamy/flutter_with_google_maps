@@ -17,20 +17,18 @@ class _CustomGoogleMapState extends State<CustomGoogleMap> {
     initialCameraPostion = const CameraPosition(
         zoom: 1, target: LatLng(31.187084851056554, 29.928110526889437));
 
-    initPolyLines();
+    initPolygons();
     super.initState();
   }
 
-  Set<Marker> markers = {};
-
-  Set<Polyline> polyLines = {};
   late GoogleMapController googleMapController;
+
+  Set<Polygon> ploygons = {};
   @override
   Widget build(BuildContext context) {
     return GoogleMap(
-      polylines: polyLines,
+      polygons: ploygons,
       zoomControlsEnabled: false,
-      markers: markers,
       onMapCreated: (controller) {
         googleMapController = controller;
         initMapStyle();
@@ -46,33 +44,38 @@ class _CustomGoogleMapState extends State<CustomGoogleMap> {
     googleMapController.setMapStyle(nightMapStyle);
   }
 
-  void initPolyLines() {
-    Polyline polyline = const Polyline(
-        geodesic: true,
-        patterns: [PatternItem.dot],
-        width: 5,
-        zIndex: 2,
-        startCap: Cap.roundCap,
-        color: Colors.red,
-        polylineId: PolylineId('1'),
-        points: [
-          LatLng(31.146667052085522, 29.881753268076064),
-          LatLng(31.183682581705128, 29.9059575204872),
-          LatLng(31.178982998722887, 29.942006407056986),
-          LatLng(31.209379299176593, 29.93719988884768),
-        ]);
-    Polyline polyline2 = const Polyline(
-        width: 5,
-        zIndex: 1,
-        startCap: Cap.roundCap,
-        color: Colors.black,
-        polylineId: PolylineId('2'),
-        points: [
-          LatLng(-32.53225272725898, 20.961370268194745),
-          LatLng(84.0278401870962, 53.83246214878455),
-        ]);
-    polyLines.add(polyline);
-    polyLines.add(polyline2);
+  void initPolygons() {
+    Polygon polygon = Polygon(
+        holes: const [
+          [
+            LatLng(25.030949373562184, 29.71903473330491),
+            LatLng(28.753297577743304, 26.950480244745513),
+            LatLng(29.673819683117372, 34.245401595552806),
+          ]
+        ],
+        strokeWidth: 3,
+        fillColor: Colors.black.withOpacity(.5),
+        points: const [
+          LatLng(31.5, 25.0),
+          LatLng(31.5, 28.0),
+          LatLng(31.2, 30.0),
+          LatLng(31.0, 32.0),
+          LatLng(31.0, 34.0),
+          LatLng(31.0, 34.0),
+          LatLng(29.5, 34.5),
+          LatLng(28.0, 34.5),
+          LatLng(25.0, 34.0),
+          LatLng(25.0, 34.0),
+          LatLng(22.0, 36.0),
+          LatLng(22.0, 36.0),
+          LatLng(22.0, 31.0),
+          LatLng(22.0, 25.0),
+          LatLng(22.0, 25.0),
+          LatLng(25.0, 25.0),
+          LatLng(31.5, 25.0)
+        ],
+        polygonId: const PolygonId('1'));
+    ploygons.add(polygon);
   }
 }
 // world view 0 -> 3
