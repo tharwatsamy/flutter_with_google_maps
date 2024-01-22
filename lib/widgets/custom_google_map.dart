@@ -17,17 +17,17 @@ class _CustomGoogleMapState extends State<CustomGoogleMap> {
     initialCameraPostion = const CameraPosition(
         zoom: 1, target: LatLng(31.187084851056554, 29.928110526889437));
 
-    initPolygons();
+    initCircles();
     super.initState();
   }
 
   late GoogleMapController googleMapController;
 
-  Set<Polygon> ploygons = {};
+  Set<Circle> circles = {};
   @override
   Widget build(BuildContext context) {
     return GoogleMap(
-      polygons: ploygons,
+      circles: circles,
       zoomControlsEnabled: false,
       onMapCreated: (controller) {
         googleMapController = controller;
@@ -44,38 +44,14 @@ class _CustomGoogleMapState extends State<CustomGoogleMap> {
     googleMapController.setMapStyle(nightMapStyle);
   }
 
-  void initPolygons() {
-    Polygon polygon = Polygon(
-        holes: const [
-          [
-            LatLng(25.030949373562184, 29.71903473330491),
-            LatLng(28.753297577743304, 26.950480244745513),
-            LatLng(29.673819683117372, 34.245401595552806),
-          ]
-        ],
-        strokeWidth: 3,
+  void initCircles() {
+    Circle koshryAbuTarekServiceCircle = Circle(
         fillColor: Colors.black.withOpacity(.5),
-        points: const [
-          LatLng(31.5, 25.0),
-          LatLng(31.5, 28.0),
-          LatLng(31.2, 30.0),
-          LatLng(31.0, 32.0),
-          LatLng(31.0, 34.0),
-          LatLng(31.0, 34.0),
-          LatLng(29.5, 34.5),
-          LatLng(28.0, 34.5),
-          LatLng(25.0, 34.0),
-          LatLng(25.0, 34.0),
-          LatLng(22.0, 36.0),
-          LatLng(22.0, 36.0),
-          LatLng(22.0, 31.0),
-          LatLng(22.0, 25.0),
-          LatLng(22.0, 25.0),
-          LatLng(25.0, 25.0),
-          LatLng(31.5, 25.0)
-        ],
-        polygonId: const PolygonId('1'));
-    ploygons.add(polygon);
+        center: const LatLng(30.050250485630052, 31.237686871310093),
+        radius: 10000,
+        circleId: const CircleId('1'));
+
+    circles.add(koshryAbuTarekServiceCircle);
   }
 }
 // world view 0 -> 3
