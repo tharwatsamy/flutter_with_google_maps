@@ -21,6 +21,7 @@ class _CustomGoogleMapState extends State<CustomGoogleMap> {
 
     location = Location();
 
+    updateMyLocation();
     super.initState();
   }
 
@@ -45,7 +46,7 @@ class _CustomGoogleMapState extends State<CustomGoogleMap> {
     googleMapController.setMapStyle(nightMapStyle);
   }
 
-  void checkAndRequestLocationService() async {
+  Future<void> checkAndRequestLocationService() async {
     var isServiceEnabled = await location.serviceEnabled();
     if (!isServiceEnabled) {
       isServiceEnabled = await location.requestService();
@@ -55,7 +56,7 @@ class _CustomGoogleMapState extends State<CustomGoogleMap> {
     }
   }
 
-  void checkAndRequestLocationPermission() async {
+  Future<void> checkAndRequestLocationPermission() async {
     var permissionStatus = await location.hasPermission();
     if (permissionStatus == PermissionStatus.denied) {
       permissionStatus = await location.requestPermission();
@@ -68,6 +69,12 @@ class _CustomGoogleMapState extends State<CustomGoogleMap> {
 
   void getLocationdata() {
     location.onLocationChanged.listen((locationData) {});
+  }
+
+  void updateMyLocation() async {
+    await checkAndRequestLocationService();
+    await checkAndRequestLocationPermission();
+    getLocationdata();
   }
 }
 
