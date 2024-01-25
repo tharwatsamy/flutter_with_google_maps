@@ -20,7 +20,6 @@ class _CustomGoogleMapState extends State<CustomGoogleMap> {
         zoom: 17, target: LatLng(31.187084851056554, 29.928110526889437));
 
     location = Location();
-    checkAndRequestLocationService();
 
     super.initState();
   }
@@ -34,8 +33,6 @@ class _CustomGoogleMapState extends State<CustomGoogleMap> {
       onMapCreated: (controller) {
         googleMapController = controller;
         initMapStyle();
-
-        location.onLocationChanged.listen((locationData) {});
       },
       initialCameraPosition: initialCameraPostion,
     );
@@ -56,8 +53,6 @@ class _CustomGoogleMapState extends State<CustomGoogleMap> {
         // TODO: show error bar
       }
     }
-
-    checkAndRequestLocationPermission();
   }
 
   void checkAndRequestLocationPermission() async {
@@ -70,7 +65,12 @@ class _CustomGoogleMapState extends State<CustomGoogleMap> {
       }
     }
   }
+
+  void getLocationdata() {
+    location.onLocationChanged.listen((locationData) {});
+  }
 }
+
 
 // inquire about location service
 // request permission
