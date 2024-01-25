@@ -25,7 +25,7 @@ class _CustomGoogleMapState extends State<CustomGoogleMap> {
     super.initState();
   }
 
-  late GoogleMapController googleMapController;
+  GoogleMapController? googleMapController;
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +43,7 @@ class _CustomGoogleMapState extends State<CustomGoogleMap> {
     var nightMapStyle = await DefaultAssetBundle.of(context)
         .loadString('assets/map_syles/night_map_style.json');
 
-    googleMapController.setMapStyle(nightMapStyle);
+    googleMapController!.setMapStyle(nightMapStyle);
   }
 
   Future<void> checkAndRequestLocationService() async {
@@ -56,25 +56,39 @@ class _CustomGoogleMapState extends State<CustomGoogleMap> {
     }
   }
 
-  Future<void> checkAndRequestLocationPermission() async {
+  Future<bool> checkAndRequestLocationPermission() async {
     var permissionStatus = await location.hasPermission();
+    if (permissionStatus == PermissionStatus.deniedForever) {
+      return false;
+    }
     if (permissionStatus == PermissionStatus.denied) {
       permissionStatus = await location.requestPermission();
-
       if (permissionStatus != PermissionStatus.granted) {
-        // TODO: show error bar
+        return false;
       }
     }
+
+    return true;
   }
 
   void getLocationdata() {
-    location.onLocationChanged.listen((locationData) {});
+    location.onLocationChanged.listen(
+      (locationData) {
+        var camerPosition = CameraPosition(
+            target: LatLng(locationData.latitude!, locationData.longitude!),
+            zoom: 15);
+        googleMapController
+            ?.animateCamera(CameraUpdate.newCameraPosition(camerPosition));
+      },
+    );
   }
 
   void updateMyLocation() async {
     await checkAndRequestLocationService();
-    await checkAndRequestLocationPermission();
-    getLocationdata();
+    var hasPermission = await checkAndRequestLocationPermission();
+    if (hasPermission) {
+      getLocationdata();
+    } else {}
   }
 }
 
