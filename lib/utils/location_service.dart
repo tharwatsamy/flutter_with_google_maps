@@ -22,10 +22,13 @@ class LocationService {
     }
     if (permissionStatus == PermissionStatus.denied) {
       permissionStatus = await location.requestPermission();
-
       return permissionStatus == PermissionStatus.granted;
     }
 
     return true;
+  }
+
+  void getRealTimeLocationData(void Function(LocationData)? onData) {
+    location.onLocationChanged.listen(onData);
   }
 }
